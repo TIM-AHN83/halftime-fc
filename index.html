@@ -1267,6 +1267,7 @@ function sendPresence(now){ if(!ROOM||!started) return;
   if(now-lastPresT<100) return; const p=player.root.position;
   const pr={n:S.name,c:CLUB.id,x:+p.x.toFixed(2),y:+p.y.toFixed(2),z:+p.z.toFixed(2),r:+player.model.rotation.y.toFixed(2),s:+player.speed.toFixed(1),L:compactLook(S.look),e:myEmote.e,et:myEmote.et};
   const str=JSON.stringify(pr); if(str===lastPresStr) return; lastPresStr=str; lastPresT=now; ROOM.presence(pr).catch(()=>{}); }
+setInterval(()=>{ try{ sendPresence(performance.now()); if(document.hidden){ sweepOthers(); updOnline(); } }catch(e){} },1000);
 function updateOthers(dt){ const k=1-Math.exp(-10*dt);
   for(const o of others.values()){ const vis=started&&o.c===CLUB.id; o.av.root.visible=vis; if(!vis) continue; const p=o.av.root.position;
     p.x+=(o.tx-p.x)*k; p.z+=(o.tz-p.z)*k; p.y+=(o.ty-p.y)*k; o.av.y=p.y; o.av.model.rotation.y=lerpAngle(o.av.model.rotation.y,o.r,k); o.av.speed=o.s; o.av.anim(dt); } }
